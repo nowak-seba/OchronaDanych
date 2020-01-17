@@ -96,19 +96,19 @@ namespace SzyfrujRSA
             
 
 
-            log("Decrypting, M' = C^d mod n");
-            var decrypted = DecryptList(encrypted);
-            //decrypted.ToList().ForEach(x => log(x.ToString()));  //Log to console
+            //log("Decrypting, M' = C^d mod n");
+            //var decrypted = DecryptList(encrypted);
+            ////decrypted.ToList().ForEach(x => log(x.ToString()));  //Log to console
 
-            var transformed2 = GetBitsEnumerable2(decrypted);
-            transformed2.ToList().ForEach(x => log(x.ToString()));  //Log to console
+            //var transformed2 = GetBitsEnumerable2(decrypted);
+            //transformed2.ToList().ForEach(x => log(x.ToString()));  //Log to console
 
-            var myString = string.Join(string.Empty, transformed2.ToList());
-            log(myString);
+            //var myString = string.Join(string.Empty, transformed2.ToList());
+            //log(myString);
 
-            // split string into list of 3 characters
-            var lineChunked3 = Helpers.ChunksUpto(myString, 3);           
-            txtDecrypted.Text = GetCharacters(lineChunked3);
+            //// split string into list of 3 characters
+            //var lineChunked3 = Helpers.ChunksUpto(myString, 3);           
+            //txtDecrypted.Text = GetCharacters(lineChunked3);
         }
 
 
@@ -166,14 +166,33 @@ namespace SzyfrujRSA
 
             //---
             var transformed = Encrypting.GetBitsEnumerable(lineChunked2);
-            transformed.ToList().ForEach(x => log(x));  //Log to console
+            if (_debugMode)
+                transformed.ToList().ForEach(x => log(x));  //Log to console
 
             log("Encrypting, C = M^e mod n");
             var encrypted = Encrypting.EncryptList(transformed);
-            encrypted.ToList().ForEach(x => log(x.ToString()));  //Log to console
+            if(_debugMode)
+                encrypted.ToList().ForEach(x => log(x.ToString()));  //Log to console
             log(Encrypting.DisplayEnumerable(encrypted));
             txtEncrypted.Text = Encrypting.DisplayEnumerable(encrypted);
 
+        }
+
+        private void butSaveEncryption_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveEncyptedText = new SaveFileDialog();
+            saveEncyptedText.FileName = "text.enc";
+            saveEncyptedText.Filter = "enc files (*.enc)|*.enc|All files (*.*)|*.*";
+            saveEncyptedText.FilterIndex = 2;
+            saveEncyptedText.RestoreDirectory = true;
+
+            if (saveEncyptedText.ShowDialog() == DialogResult.OK)
+            {
+                using (StreamWriter sw = new StreamWriter(saveEncyptedText.FileName, false, System.Text.Encoding.Default))
+                {
+                    sw.WriteLine(txtEncrypted.Text);
+                }
+            }
         }
     }
 }
