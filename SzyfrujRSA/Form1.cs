@@ -102,15 +102,8 @@ namespace SzyfrujRSA
         private void butEncyptText_Click(object sender, EventArgs e)
         {
             // split string into list of 2 characters
+            // eg. 'Ala ...' --> 'Al', 'a '
             var lineChunked2 = Helpers.ChunksUpto(_line, 2);
-
-            // build list of two characters in ASCII representation
-            //var sb = new StringBuilder();
-            //var lineChunked4 = lineChunked3.ToList();
-            //lineChunked4.ForEach(i => sb.Append(GetBits(i)));
-            //if (line.Length % 2 == 1)
-            //    sb.Append(GetBits("\0"));   // add null character
-            //Console.WriteLine(sb.ToString());
 
             // build list of two characters in ASCII representation
             var transformed = Encrypting.GetBitsEnumerable(lineChunked2);
@@ -143,6 +136,9 @@ namespace SzyfrujRSA
             }
         }
 
+        /// <summary>
+        /// Open 'text.enc' file
+        /// </summary>
         private void butOpenEnc_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
@@ -160,6 +156,9 @@ namespace SzyfrujRSA
             }
         }
 
+        /// <summary>
+        /// Decrypt text from text file
+        /// </summary>
         private void button1_Click(object sender, EventArgs e)
         {
             log("Decrypting, M' = C^d mod n");
@@ -177,6 +176,26 @@ namespace SzyfrujRSA
             // split string into list of 3 characters
             var lineChunked3 = Helpers.ChunksUpto(myString, 3);
             txtDecrypted.Text = Decrypting.GetCharacters(lineChunked3);
+        }
+
+        /// <summary>
+        /// Save decrypted text into 'text.dec'
+        /// </summary>
+        private void butSaveDecryption_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveDecryptedText = new SaveFileDialog();
+            saveDecryptedText.FileName = "text.dec";
+            saveDecryptedText.Filter = "dec files (*.dec)|*.dec|All files (*.*)|*.*";
+            saveDecryptedText.FilterIndex = 2;
+            saveDecryptedText.RestoreDirectory = true;
+
+            if (saveDecryptedText.ShowDialog() == DialogResult.OK)
+            {
+                using (StreamWriter sw = new StreamWriter(saveDecryptedText.FileName, false, System.Text.Encoding.Default))
+                {
+                    sw.WriteLine(txtDecrypted.Text);
+                }
+            }
         }
     }
 }

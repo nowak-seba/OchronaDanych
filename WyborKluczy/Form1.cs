@@ -49,6 +49,12 @@ namespace WyborKluczy
             txtQ.Text = prime.ToString();
         }
 
+        /// <summary>
+        /// Check if this number is prime 
+        /// </summary>
+        /// <param name="n">number</param>
+        /// <param name="k"></param>
+        /// <returns></returns>
         public bool IsProbabilyPrime(BigInteger n, int k)
         {
             bool result = false;
@@ -86,6 +92,7 @@ namespace WyborKluczy
             }
             return result;
         }
+
         public BigInteger RandomIntegerBelow(int n)
         {
             var rng = new RNGCryptoServiceProvider();
@@ -102,6 +109,10 @@ namespace WyborKluczy
             BigInteger p = new BigInteger(bytes);
             return p;
         }
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/5330862/securely-generating-a-uniformly-random-biginteger
+        /// </summary>
         public BigInteger RandomIntegerBelow(BigInteger bound)
         {
             var rng = new RNGCryptoServiceProvider();
@@ -128,7 +139,9 @@ namespace WyborKluczy
         private void btnCalculateN_Click(object sender, EventArgs e)
         {
             log("n = p*q = " + txtP.Text + " x " + txtQ.Text);
-            txtN.Text = (BigInteger.Multiply(BigInteger.Parse(txtP.Text), BigInteger.Parse(txtQ.Text))).ToString();
+            BigInteger multiplyVal = BigInteger.Parse(txtP.Text) * BigInteger.Parse(txtQ.Text);
+            txtN.Text = Convert.ToString(multiplyVal);
+            //txtN.Text = (BigInteger.Multiply(BigInteger.Parse(txtP.Text), BigInteger.Parse(txtQ.Text))).ToString();
         }
 
         public void log(string s)
@@ -142,6 +155,12 @@ namespace WyborKluczy
             txtTot.Text = (BigInteger.Multiply(BigInteger.Parse(txtP.Text) - 1, BigInteger.Parse(txtQ.Text) - 1)).ToString();
         }
 
+        /// <summary>
+        /// Generate a random number below totient (Euler's function for integers) 
+        /// and test if gcd(totient, e) = 1, and looped until equals one
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnGenerateE_Click(object sender, EventArgs e)
         {
             log("generating e randomely such that gcd(e,totient) = 1");
@@ -178,6 +197,9 @@ namespace WyborKluczy
                 return GCD_Euclidean(B % A, A);
         }
 
+        /// <summary>
+        /// Extended Euclidean algorythm to calculate d 
+        /// </summary>
         private void btnCalculateD_Click(object sender, EventArgs e)
         {
             BigInteger[] result = new BigInteger[3];
@@ -191,6 +213,12 @@ namespace WyborKluczy
             txtPrivateKey.Text = "{" + result[2].ToString() + "," + txtN.Text.ToString() + "}";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="A">Calculated totient</param>
+        /// <param name="B">Calculated e</param>
+        /// <returns></returns>
         public BigInteger[] Extended_GCD(BigInteger A, BigInteger B)
         {
             BigInteger[] result = new BigInteger[3];

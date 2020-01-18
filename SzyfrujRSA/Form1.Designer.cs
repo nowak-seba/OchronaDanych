@@ -52,6 +52,7 @@
             this.butDecryptText = new System.Windows.Forms.Button();
             this.butOpenEnc = new System.Windows.Forms.Button();
             this.txtDecrypted = new System.Windows.Forms.TextBox();
+            this.butSaveDecryption = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -235,22 +236,24 @@
             // 
             this.txtLog.BackColor = System.Drawing.Color.Black;
             this.txtLog.ForeColor = System.Drawing.Color.Yellow;
-            this.txtLog.Location = new System.Drawing.Point(12, 347);
+            this.txtLog.Location = new System.Drawing.Point(12, 364);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(776, 128);
+            this.txtLog.Size = new System.Drawing.Size(776, 137);
             this.txtLog.TabIndex = 3;
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.butSaveDecryption);
             this.groupBox4.Controls.Add(this.textEncyptedFile);
             this.groupBox4.Controls.Add(this.butDecryptText);
             this.groupBox4.Controls.Add(this.butOpenEnc);
             this.groupBox4.Controls.Add(this.txtDecrypted);
+            this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.471698F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.Location = new System.Drawing.Point(12, 254);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(775, 87);
+            this.groupBox4.Size = new System.Drawing.Size(775, 104);
             this.groupBox4.TabIndex = 4;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Decrypting";
@@ -289,11 +292,22 @@
             this.txtDecrypted.Size = new System.Drawing.Size(515, 20);
             this.txtDecrypted.TabIndex = 0;
             // 
+            // butSaveDecryption
+            // 
+            this.butSaveDecryption.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.butSaveDecryption.Location = new System.Drawing.Point(530, 75);
+            this.butSaveDecryption.Name = "butSaveDecryption";
+            this.butSaveDecryption.Size = new System.Drawing.Size(240, 23);
+            this.butSaveDecryption.TabIndex = 4;
+            this.butSaveDecryption.Text = "Save decryption (text.dec)";
+            this.butSaveDecryption.UseVisualStyleBackColor = false;
+            this.butSaveDecryption.Click += new System.EventHandler(this.butSaveDecryption_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 485);
+            this.ClientSize = new System.Drawing.Size(800, 507);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.groupBox3);
@@ -340,6 +354,7 @@
         private System.Windows.Forms.TextBox textEncyptedFile;
         private System.Windows.Forms.Button butDecryptText;
         private System.Windows.Forms.Button butOpenEnc;
+        private System.Windows.Forms.Button butSaveDecryption;
     }
 }
 
