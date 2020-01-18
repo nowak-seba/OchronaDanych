@@ -25,18 +25,16 @@ namespace SzyfrujRSA
             return sb.ToString();
         }
 
-        public static IEnumerable<BigInteger> EncryptList(IEnumerable<string> list)
+        public static IEnumerable<BigInteger> EncryptList(IEnumerable<string> list, BigInteger exponent, BigInteger modulus)
         {
             List<BigInteger> bitList = new List<BigInteger>();
-            list.ToList().ForEach(item => bitList.Add(EncryptValue(item)));
+            list.ToList().ForEach(val => bitList.Add(EncryptValue(val, exponent, modulus)));
             return bitList;
         }
 
-        private static BigInteger EncryptValue(string m)
+        private static BigInteger EncryptValue(string value, BigInteger exponent, BigInteger modulus)
         {
-            string n = "33965211954069027011";
-            string ee = "17956500554669232013";
-            return BigInteger.ModPow(BigInteger.Parse(m), BigInteger.Parse(ee), BigInteger.Parse(n));
+            return BigInteger.ModPow(BigInteger.Parse(value), exponent, modulus);
         }
 
         public static string DisplayEnumerable<T>(IEnumerable<T> list)

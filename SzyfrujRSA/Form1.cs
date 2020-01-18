@@ -10,17 +10,16 @@ namespace SzyfrujRSA
 {
     public partial class Form1 : Form
     {
-        public bool _debugMode = false;
+        public bool _debugMode = true;
         public BigInteger _e;
         public BigInteger _d;
         public BigInteger _n;
         public string _line = string.Empty;
+        public IEnumerable<BigInteger> _encrypted;
 
         public Form1()
         {
             InitializeComponent();
-
-            
         }
 
         private void butOpenPublicKey_Click(object sender, EventArgs e)
@@ -91,61 +90,10 @@ namespace SzyfrujRSA
             if (line.Length % 2 == 1)
                 line += "\0";           // add null character
 
-            _line = line;               // assign to public param 
-
-            
-
-
-            //log("Decrypting, M' = C^d mod n");
-            //var decrypted = DecryptList(encrypted);
-            ////decrypted.ToList().ForEach(x => log(x.ToString()));  //Log to console
-
-            //var transformed2 = GetBitsEnumerable2(decrypted);
-            //transformed2.ToList().ForEach(x => log(x.ToString()));  //Log to console
-
-            //var myString = string.Join(string.Empty, transformed2.ToList());
-            //log(myString);
-
-            //// split string into list of 3 characters
-            //var lineChunked3 = Helpers.ChunksUpto(myString, 3);           
-            //txtDecrypted.Text = GetCharacters(lineChunked3);
-        }
-
-
-        
-
-        
-
-        private IEnumerable<BigInteger> DecryptList<T>(IEnumerable<T> list)
-        {
-            List<BigInteger> bitList = new List<BigInteger>();
-            list.ToList().ForEach(item => bitList.Add(DecryptValue(item.ToString())));
-            return bitList;
-        }
-
-        private BigInteger DecryptValue(string c)
-        {
-            string n = "33965211954069027011";
-            string d = "15121732598594807605";
-            return BigInteger.ModPow(BigInteger.Parse(c), BigInteger.Parse(d), BigInteger.Parse(n));            
+            _line = line;               // assign to public param
         }
 
         
-
-        private IEnumerable<string> GetBitsEnumerable2(IEnumerable<BigInteger> list)
-        {
-            List<string> slist = new List<string>();
-            list.ToList().ForEach(item => slist.Add(Convert.ToString(item).PadLeft(6, '0')));
-            return slist;
-        }
-
-        public static string GetCharacters(IEnumerable<string> list)
-        {
-            List<byte> byteList = new List<byte>();                     
-            list.ToList().ForEach(item => byteList.Add(Convert.ToByte(item)));
-            return Encoding.ASCII.GetString(byteList.ToArray()).TrimEnd('\0');
-        }
-
         public void log(string s)
         {
             txtLog.Text += s + "\r\n";
@@ -164,18 +112,18 @@ namespace SzyfrujRSA
             //    sb.Append(GetBits("\0"));   // add null character
             //Console.WriteLine(sb.ToString());
 
-            //---
+            // build list of two characters in ASCII representation
             var transformed = Encrypting.GetBitsEnumerable(lineChunked2);
             if (_debugMode)
                 transformed.ToList().ForEach(x => log(x));  //Log to console
 
             log("Encrypting, C = M^e mod n");
-            var encrypted = Encrypting.EncryptList(transformed);
+            var encrypted = Encrypting.EncryptList(transformed, _e, _n);
             if(_debugMode)
                 encrypted.ToList().ForEach(x => log(x.ToString()));  //Log to console
+            _encrypted = encrypted;
             log(Encrypting.DisplayEnumerable(encrypted));
             txtEncrypted.Text = Encrypting.DisplayEnumerable(encrypted);
-
         }
 
         private void butSaveEncryption_Click(object sender, EventArgs e)
@@ -193,6 +141,42 @@ namespace SzyfrujRSA
                     sw.WriteLine(txtEncrypted.Text);
                 }
             }
+        }
+
+        private void butOpenEnc_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFile = new OpenFileDialog();
+            openFile.FileName = "text.enc";
+            openFile.Filter = "enc files (*.enc)|*.enc|All files (*.*)|*.*";
+            openFile.FilterIndex = 2;
+            openFile.RestoreDirectory = true;
+
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                var content = File.ReadAllText(openFile.FileName);
+                textEncyptedFile.Text = content ?? "empty";
+                
+                log(string.Format("Encypted text from file: {0}", content));
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            log("Decrypting, M' = C^d mod n");
+            var decrypted = Decrypting.DecryptList(_encrypted, _d, _n);
+            if(_debugMode)
+                decrypted.ToList().ForEach(x => log(x.ToString()));  //Log to console
+
+            var transformed2 = Decrypting.GetBitsEnumerable2(decrypted);
+            if(_debugMode)
+                transformed2.ToList().ForEach(x => log(x.ToString()));  //Log to console
+
+            var myString = string.Join(string.Empty, transformed2.ToList());
+            log(myString);
+
+            // split string into list of 3 characters
+            var lineChunked3 = Helpers.ChunksUpto(myString, 3);
+            txtDecrypted.Text = Decrypting.GetCharacters(lineChunked3);
         }
     }
 }
